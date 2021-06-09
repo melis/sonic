@@ -1,70 +1,202 @@
-# Getting Started with Create React App
+Тестовое задание: React Native, Front dev middle
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+1 Тестовое задание
 
-## Available Scripts
+Необходимо написать простое приложение на React.js (с использованием https://redux-orm.github.io/redux-orm/), которое получало бы список товаров и категорий по сети, выводило бы их на экране и предоставляло возможность добавлять их в корзину и создавать заказ.
 
-In the project directory, you can run:
+Корзина и заказ, ради простоты реализации, должны просто храниться локально.
 
-### `yarn start`
+Внешний вид - https://www.figma.com/file/Eb6uT4Pjnk7O14q0YUXtJq/%D0%94%D0%BB%D1%8F-React.js-web-middle?node-id=0%3A1
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+1.1 Данные
 
-### `yarn test`
+Данные - несколько категорий, содержащие товары.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Для получения данных реализован простой REST интерфейс.
 
-### `yarn build`
+Для получения списка сущностей используется GET запрос вида
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+https://test2.sionic.ru/api/{model}
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Где {model} - название сущности
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Параметры запроса передаются виде json кодированной строки. Доступны следующие параметры запроса:
 
-### `yarn eject`
+filter - фильтрация по любому свойству сущности, например filter={"category_id":20} для модели Products вернет нам все товары категории с id=20. Также значения можно указывать виде массива, если нужно отфильтровать несколько id, например filter={"category_id":[20,21,22]}
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+sort - сортировка сущностей по любому свойству, например sort=["name","ASC"] для модели Products отсортирует товары по имени по возрастанию
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+range - выборка из диапазона, например range=[0,24] вернет нам все сущности с 0-й по 24-ю, всего 25.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+За один запрос возвращается не более 50 записей.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+Общее количество записей возвращается виде заголовка, например:
 
-## Learn More
+Content-Range: Products 0-24/319
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Для получения одной записи по ее id используется запрос вида
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+https://test2.sionic.ru/api/{model}/{id}
 
-### Code Splitting
+Где {model} - название сущности, а {id} - ее id
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
 
-### Analyzing the Bundle Size
+Доступны следующие методы:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+Категории:
 
-### Making a Progressive Web App
+GET https://test2.sionic.ru/api/Categories?sort=["name","ASC"]&range=[0,24]
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+GET https://test2.sionic.ru/api/Categories/21
 
-### Advanced Configuration
+Свойства:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+name - название категории
 
-### Deployment
+Товары:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+GET https://test2.sionic.ru/api/Products?sort=["name","ASC"]&range=[0,24]&filter={"category_id":20}
 
-### `yarn build` fails to minify
+GET https://test2.sionic.ru/api/Products/2001
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Свойства:
+
+name - название товара
+
+category_id - id категории
+
+description - описание товара
+
+Изображения товаров:
+
+GET https://test2.sionic.ru/api/ProductImages?sort=["image_name","ASC"]&range=[0,24]&filter={"product_id":1001}
+
+GET https://test2.sionic.ru/api/ProductImages/3001
+
+Свойства:
+
+image_name - имя файла изображения
+
+product_id - id товара
+
+image_url - ссылка на изображение
+
+Вариации товаров:
+
+GET https://test2.sionic.ru/api/ProductVariations
+
+GET https://test2.sionic.ru/api/ProductVariations/1
+
+product_id - id товара
+
+price - цена данной вариации товара
+
+stock - количество в наличии
+
+Свойства вариаций:
+
+GET https://test2.sionic.ru/api/ProductVariationProperties
+
+GET https://test2.sionic.ru/api/ProductVariationProperties/1
+
+Свойства:
+
+name - название свойства
+
+type - тип свойства: 0 - строка, 1 - целое число, 2 - число с плавающей точкой, 3 - значение из списка
+
+Значения списков свойств вариаций:
+
+GET https://test2.sionic.ru/api/ProductVariationPropertyListValues
+
+GET https://test2.sionic.ru/api/ProductVariationPropertyListValues/1
+
+Свойства:
+
+product_variation_property_id - id свойства вариации
+
+title - заголовок значения
+
+value - значение
+
+Значения свойств вариаций:
+
+GET https://test2.sionic.ru/api/ProductVariationPropertyValues
+
+GET https://test2.sionic.ru/api/ProductVariationPropertyValues/1
+
+Свойства:
+
+product_variation_id - id свойства вариации
+
+product_variation_property_id - id свойства вариации
+
+value_string - значение типа строка
+
+value_int - значение типа целое число
+
+value_float - значение типа число с плавающей точкой
+
+product_variation_property_list_value_id - id значения свойства вариации из списка
+
+
+
+1.2 Приложение
+
+Приложение должно быть написано на React, запускаться на современных браузерах. При старте приложения открывается экран со списком категорий и товаров. Каждый товар можно положить в корзину и, в итоге, сделать заказ. Также должен быть экран вывода списка созданных заказов.
+
+Корзину и заказ нет необходимости реализовывать через сеть, достаточно просто хранить их в local storage.
+
+Будут ли сделаны экраны с данными разными компонентами, одним компонентом или как-то ещё - на усмотрение исполнителя.
+
+На всех экранах приложения должна быть кнопка перехода в корзину, а также кнопка перехода к списку созданных заказов.
+
+
+1.2.1 Категории
+
+На экране категорий должны выводиться все категории, полученные с сервера, с возможностью выбрать одну из них и показать товары только одной категории. У категорий выводятся названия.На списке товаров для конкретной категории выводится, собственно, список товаров, принадлежащих данной категории. Около каждого товара выводится его название, цена и свойства, а также кнопка добавления в корзину. При нажатии на неё товар добавляется в корзину.
+
+
+
+1.2.2 Товар
+
+На списке товаров для конкретной категории выводится, собственно, список товаров, принадлежащих данной категории. Около каждого товара выводится его название, минимальная цена (цена самой дешевой вариации) и свойства, а также кнопка добавления в корзину. При нажатии на неё пользователь выбирает вариацию, которую хочет добавить в корзину.
+
+В карточке товара необходимо отобразить кнопки выбора вариации по ее свойствам. При нажатии на кнопку добавления в корзину, добавляется конкретно выбранная пользователем вариация товара.
+
+
+1.2.3 Заказ
+
+
+На экране оформления заказа находится форма с текстовыми полями:
+
+Имя
+
+Адрес
+
+Телефон
+
+Время
+
+Все поля обязательны. После заполнения всех полей пользователь может нажать на кнопку "Оформить заказ", создастся новый заказ с содержимым текущей выбранной корзины, а сама корзина очистится.
+
+
+1.2.4 История заказов
+
+
+На данном экране выводится список всех созданных заказов пользователя, с их содержимым (корзина) и датой создания.
+
+
+1.3 Дополнительно
+
+
+Необходимо реализовать:
+
+Вывод товаров с подгрузкой (infinite scroll)
+
+Фильтры в категориях по названиям товаров и цене.
+
+Адаптив на разные размеры.
+
+Дополнение 01/2021 - делаем вариант с 0% скидкой. Скидку никак не обрабатываем.
