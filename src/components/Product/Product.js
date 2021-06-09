@@ -3,6 +3,7 @@ import axios from "axios";
 import Carousel from "../Carousel/Carousel";
 import styles from "./Product.module.scss";
 import cn from "classnames";
+import { Link } from "react-router-dom";
 
 const Product = ({ product }) => {
   const [varies, setVaries] = useState([]);
@@ -63,23 +64,29 @@ const Product = ({ product }) => {
           </button>
         ) : (
           <div className={styles.addBasket__go}>
-            Добавлено в корзину{" "}
-            <div>
-              <a href="/">Открыть корзину</a>
-            </div>
+            <Link to="/box"> В корзине</Link>
           </div>
         )}
       </div>
 
       <div className={cn(styles.select, { [styles.select__active]: active })}>
         {varies.map((el) => (
-          <Label el={el} key={el.id} setSelect={setSelect} select={select} />
+          <Label
+            el={el}
+            key={el.id}
+            setSelect={setSelect}
+            select={select}
+            product_name={product.name}
+          />
         ))}
         <button
           className={styles.select__button}
           disabled={!select}
           onClick={() => {
-            console.log(select);
+            const x = localStorage.getItem("box")
+              ? JSON.parse(localStorage.getItem("box"))
+              : [];
+            localStorage.setItem("box", JSON.stringify([...x, select]));
             setActive(false);
           }}
         >
@@ -99,15 +106,15 @@ const Product = ({ product }) => {
 };
 export default Product;
 
-function Label({ el, setSelect, select }) {
+function Label({ el, setSelect, select, product_name }) {
   const [count, setCount] = useState(1);
   const [id, setId] = useState();
   useEffect(() => {
     setId(select ? select.id : null);
   }, [select]);
   useEffect(() => {
-    if (el.id === id) setSelect({ ...el, count });
-  }, [count, id, el, setSelect]);
+    if (el.id === id) setSelect({ ...el, count, product_name });
+  }, [count, id, el, setSelect, product_name]);
   return (
     <div className={styles.label}>
       <label>
@@ -116,7 +123,7 @@ function Label({ el, setSelect, select }) {
             <input
               type="radio"
               onChange={() => {
-                setSelect({ ...el, count });
+                setSelect({ ...el, product_name, count });
               }}
               checked={id === el.id}
             />
