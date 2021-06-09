@@ -1,25 +1,19 @@
-import logo from './logo.svg';
-import './App.css';
-
-function App() {
+import React from "react";
+import Categories from "./components/Categories/Categories";
+import Products from "./components/Products/Products";
+const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="container">
+      <Categories />
+      <Products />
+      <button
+        onClick={() => {
+          console.log(JSON.parse(localStorage.getItem("basket")));
+        }}
+      >
+        Показать корзину в консоле
+      </button>
     </div>
   );
-}
-
+};
 export default App;

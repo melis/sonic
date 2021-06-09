@@ -1,0 +1,25 @@
+.category {
+  margin: 15px;
+  &__item {
+    display: inline-block;
+    font-family: Raleway;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 140%;
+    color: white;
+    text-align: center;
+    font-feature-settings: "pnum" on, "lnum" on;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 40.9053px;
+    margin: 3px;
+    background-color: rgb(144, 231, 31);
+    border: 1px solid transparent;
+  }
+  &__item__active {
+    background-color: white;
+    border: 1px solid black;
+    color: black;
+  }
+}

@@ -1,0 +1,60 @@
+.product {
+  width: 215px;
+  // height: 285px;
+  margin: 10px auto;
+
+  font-family: Raleway;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 140%;
+  &__price {
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 130%;
+    color: #2967ff;
+  }
+  &__name {
+    margin: 5px 0;
+  }
+  &__sale {
+    font-family: Raleway;
+    text-decoration: none;
+    font-weight: 600;
+    line-height: 140%;
+    color: #ff2d87;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+
+    > span {
+      font-weight: normal;
+      line-height: 122%;
+      color: #8d8d8e;
+      text-decoration: line-through;
+    }
+  }
+}
+.img {
+  height: 215px;
+  > img {
+    width: 100%;
+  }
+}
+
+.addBasket {
+  width: 214px;
+  height: 40px;
+  border: 1px solid #2967ff;
+  box-sizing: border-box;
+  border-radius: 26px;
+  margin: 10px 0px;
+  font-size: 14px;
+  line-height: 140%;
+  color: #2967ff;
+  background-color: white;
+  cursor: pointer;
+  &:hover {
+    background-color: #f1f3f4;
+  }
+}

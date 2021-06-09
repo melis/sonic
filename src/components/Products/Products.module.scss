@@ -1,0 +1,28 @@
+.products {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-column-gap: 10px;
+  grid-row-gap: 10px;
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr 1fr;
+  }
+  @media (max-width: 480px) {
+    grid-template-columns: 1fr;
+  }
+}
+.button {
+  width: 292px;
+  height: 50px;
+  border: none;
+  background: #f0f4fb;
+  border-radius: 51px;
+  display: block;
+  margin: auto;
+  cursor: pointer;
+
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 19px;
+
+  color: #727280;
+}
