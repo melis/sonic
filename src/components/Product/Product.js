@@ -2,10 +2,12 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Carousel from "../Carousel/Carousel";
 import styles from "./Product.module.scss";
+import cn from "classnames";
 
 const Product = ({ product }) => {
   const [varies, setVaries] = useState([]);
-  // const [select, setSelect] = useState();
+  const [select, setSelect] = useState();
+  const [active, setActive] = useState(false);
   const [min, setMin] = useState();
 
   useEffect(() => {
@@ -38,17 +40,110 @@ const Product = ({ product }) => {
   return (
     <div className={styles.product}>
       <Img id={product.id} />
-      <div className={styles.product__name}> {product.name}</div>
-      <div className={styles.product__price}>от {min} ₽</div>
-      <div className={styles.product__sale}>
-        <span>500 ₽</span>
-        -10%
+      <div className={styles.product__info}>
+        <div>
+          <div className={styles.product__name}> {product.name}</div>
+          <div className={styles.product__price}>от {min} ₽</div>
+          <div className={styles.product__sale}>
+            <span>500 ₽</span>
+            -10%
+          </div>
+        </div>
+        {!select ? (
+          <button
+            className={styles.addBasket}
+            onClick={() => {
+              setActive(true);
+              setTimeout(() => {
+                setActive(false);
+              }, 20000);
+            }}
+          >
+            Добавить в корзину
+          </button>
+        ) : (
+          <div className={styles.addBasket__go}>
+            Добавлено в корзину{" "}
+            <div>
+              <a href="/">Открыть корзину</a>
+            </div>
+          </div>
+        )}
       </div>
-      <button className={styles.addBasket}>Добавить в корзину</button>
+
+      <div className={cn(styles.select, { [styles.select__active]: active })}>
+        {varies.map((el) => (
+          <Label el={el} key={el.id} setSelect={setSelect} select={select} />
+        ))}
+        <button
+          className={styles.select__button}
+          disabled={!select}
+          onClick={() => {
+            console.log(select);
+            setActive(false);
+          }}
+        >
+          Добавить
+        </button>
+        <button
+          className={styles.select__button}
+          onClick={() => {
+            setActive(false);
+          }}
+        >
+          Закрыть
+        </button>
+      </div>
     </div>
   );
 };
 export default Product;
+
+function Label({ el, setSelect, select }) {
+  const [count, setCount] = useState(1);
+  const [id, setId] = useState();
+  useEffect(() => {
+    setId(select ? select.id : null);
+  }, [select]);
+  useEffect(() => {
+    if (el.id === id) setSelect({ ...el, count });
+  }, [count, id, el, setSelect]);
+  return (
+    <div className={styles.label}>
+      <label>
+        <div className={styles.label__box}>
+          <span>
+            <input
+              type="radio"
+              onChange={() => {
+                setSelect({ ...el, count });
+              }}
+              checked={id === el.id}
+            />
+            #{el.id}
+          </span>
+          <span>Цена: {el.price} р.</span>
+        </div>
+        <div className={styles.label__box}>
+          <span>
+            <input
+              type="number"
+              min="1"
+              max={el.stock}
+              style={{ width: "40px" }}
+              value={count}
+              onChange={(e) => {
+                setCount(Number(e.target.value));
+              }}
+            />{" "}
+            шт
+          </span>
+          <span>В нал. {el.stock} шт.</span>
+        </div>
+      </label>
+    </div>
+  );
+}
 
 function Img({ id }) {
   const [img, setImg] = useState([]);

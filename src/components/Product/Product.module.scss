@@ -1,6 +1,7 @@
 .product {
+  position: relative;
   width: 215px;
-  // height: 285px;
+  height: 370px;
   margin: 10px auto;
 
   font-family: Raleway;
@@ -8,6 +9,12 @@
   font-weight: normal;
   font-size: 14px;
   line-height: 140%;
+  &__info {
+    height: 155px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
   &__price {
     font-weight: 600;
     font-size: 20px;
@@ -34,6 +41,7 @@
       text-decoration: line-through;
     }
   }
+  // z-index: 0;
 }
 .img {
   height: 215px;
@@ -56,5 +64,45 @@
   cursor: pointer;
   &:hover {
     background-color: #f1f3f4;
+  }
+  &__go {
+    margin: 20px 0px;
+  }
+}
+.select {
+  padding: 0;
+  overflow: auto;
+  position: absolute;
+  width: 100%;
+  height: 0;
+  bottom: 0;
+  background-color: #f0f4fb;
+  transition: 0.3s;
+  &::-webkit-scrollbar {
+    width: 0;
+  }
+  &__label {
+    display: block;
+    border-bottom: 1px solid;
+    margin-top: 20px;
+    padding: 10px 0;
+  }
+  &__active {
+    padding: 15px 10px;
+    height: 370px;
+  }
+  &__button {
+    margin: 20px auto;
+    padding: 5px 15px;
+  }
+}
+
+.label {
+  border-bottom: 1px solid;
+  padding: 5px;
+  &__box {
+    margin: 5px 0;
+    display: flex;
+    justify-content: space-between;
   }
 }
